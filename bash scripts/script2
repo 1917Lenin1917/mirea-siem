@@ -1,0 +1,14 @@
+#!/bin/bash
+
+shm_permissions=$(ls -ld /home/ | cut -c 2-10)
+
+current_user=$(whoami)
+
+home_directory=$(getent passwd "$current_user" | cut -d: -f6)
+
+shm_permissions=$(ls -ld $home_directory | cut -c 2-10)
+if [ $shm_permissions == "rwxr-x---" ]; then
+echo "The home directory -$home_directory; is accessible to other users in the group. A guest account can access your personal files";
+fi
+
+

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+sudo apt update >/dev/null 2>&1
+
+count=$(apt list --upgradable 2>/dev/null | grep -c "upgradable")
+
+if [ $count -gt 0 ]; then
+echo "There are $count updates available on your device. Updates may include security updates! "
+fi
