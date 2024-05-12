@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import OverlayLoader from "../../components/OverlayLoader.vue";
-
+import useVMs from "../../api/vms.ts";
+import useApp from "../../store/app.ts";
+const { getVMs } = useVMs()
+const { currentHost } = useApp()
 const isConnectionEstablished = ref<boolean>(false)
 const connecting = ref<boolean>(false)
 const handleSetConnection = (): void => {
@@ -9,21 +12,16 @@ const handleSetConnection = (): void => {
   setTimeout((): void => {
     isConnectionEstablished.value = true
     connecting.value = false
+    console.log(currentHost.value)
   }, 2000)
 }
 
-const availableHosts = [
-  {
-    title: 'Host1',
-    value: '192.168.0.1',
-  },
-  {
-    title: 'Host2',
-    value: '192.168.0.2',
-  }
-]
-
+const availableHosts = ref<typeof currentHost.value[]>([])
 const selectedHost = ref<string | null>(null)
+onMounted(async () => {
+  availableHosts.value = await getVMs()
+  // console.log(availableHosts.value)
+})
 </script>
 
 <template>
@@ -33,7 +31,7 @@ const selectedHost = ref<string | null>(null)
        Установка соединения с linux
       </span>
       <div class="d-flex mx-auto card__selector">
-        <v-select :items="availableHosts" v-model="selectedHost" @update:model-value="isConnectionEstablished = false"></v-select>
+        <v-select :items="availableHosts" item-title="name" item-value="ip_address" v-model="currentHost" return-object @update:model-value="isConnectionEstablished = false"></v-select>
       </div>
       <v-btn :active="!!selectedHost" color="color2" width="300" flat variant="tonal" @click="handleSetConnection">
         Установить соединение

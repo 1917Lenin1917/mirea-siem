@@ -1,3 +1,6 @@
+import useApp from "../../../store/app.ts";
+const { currentHost } = useApp()
+
 export type MenuItem = {
     label: string,
     redirect: { name: string },
@@ -12,15 +15,15 @@ export default function useNavigationConfig() {
     },{
         label: 'Инциденты',
         redirect: { name: 'incidents' },
-        isVisible: true,
+        isVisible: true
     },{
         label: 'Рекомендации',
         redirect: { name: 'recommendations' },
-        isVisible: true,
+        isVisible: true
     },{
         label: 'Скрипты',
         redirect: { name: 'scripts' },
-        isVisible: true,
+        isVisible: true
     } ]
     
     return {

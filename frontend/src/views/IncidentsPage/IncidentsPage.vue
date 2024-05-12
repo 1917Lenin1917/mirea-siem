@@ -5,7 +5,8 @@ import {Table} from "../../namespaces/table";
 import {Incidents} from "../../namespaces/incidents";
 import {COLUMNS} from "../../table-configs/incidents";
 import AppModal from "../../components/base/AppModal.vue";
-
+import useApp from "../../store/app.ts";
+const { currentHost } = useApp()
 const apiItems = ref([//emulating objects from backend
   {
     time: '18:33',
@@ -49,7 +50,7 @@ const openInfoModal = (item) => {
       Инциденты
     </v-card-title>
     <v-card-subtitle class="pa-0">
-      Хост: 111.111.11.1
+      Хост: {{ currentHost?.ip_address }}
     </v-card-subtitle>
     <data-table :columns="COLUMNS" :items="items" />
   </v-card>

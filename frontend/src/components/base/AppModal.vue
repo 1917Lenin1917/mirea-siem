@@ -68,7 +68,8 @@ const props = withDefaults(
       cancelText?: string
       noCancelButton?: boolean
       options?: VDialog['$props']
-      noCloseButton?: boolean
+      noCloseButton?: boolean,
+      isBusy?: boolean
     }>(),
     {
       title: '',

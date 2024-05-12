@@ -1,34 +1,15 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
+import useApp from "../../store/app.ts";
+import axios from "axios";
+import OverlayLoader from "../../components/OverlayLoader.vue";
+const { currentHost } = useApp()
+const scripts = computed(() => currentHost.value?.scripts)
 
-const scripts = ref([
-    {
-        title: 'Test title',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque fringilla, nibh id elementum lobortis, metus sapien scelerisque dolor, vitae lacinia ante metus nec ipsum. Morbi interdum sollicitudin purus sed aliquet. Ut mollis lobortis dui eget scelerisque. Donec vel massa et dui lacinia gravida. Cras at quam dolor. Maecenas sit amet sapien ut justo ultricies semper at quis diam. Pellentesque euismod sodales lorem, in facilisis lorem varius eget. Aenean vehicula egestas ligula id sagittis. Sed pharetra, turpis ac dapibus facilisis, nisi justo consequat orci, at faucibus sapien turpis non dui. Praesent ultrices faucibus justo et posuere.\n' +
-        '\n' +
-        'Fusce in sapien velit. Integer efficitur tempor massa et varius. Aliquam posuere ante nec quam porttitor rhoncus. Quisque eget nunc nec erat ullamcorper condimentum at non arcu. Suspendisse ac metus vitae massa facilisis auctor. Donec venenatis tempus nisl sit amet elementum. Vivamus mollis porta arcu euismod laoreet. In in dapibus quam. Nam suscipit nisi quis dolor semper, sit amet sollicitudin turpis pellentesque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin ullamcorper maximus sapien, eget malesuada turpis egestas vitae. Vivamus dignissim in sem eu pharetra. Vivamus at sagittis nunc. Quisque blandit est id erat pharetra, ut elementum arcu tempor. Duis iaculis vehicula augue eget mollis. Pellentesque accumsan vulputate est et viverra.'
-    },{
-        title: 'Test title',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque fringilla, nibh id elementum lobortis, metus sapien scelerisque dolor, vitae lacinia ante metus nec ipsum. Morbi interdum sollicitudin purus sed aliquet. Ut mollis lobortis dui eget scelerisque. Donec vel massa et dui lacinia gravida. Cras at quam dolor. Maecenas sit amet sapien ut justo ultricies semper at quis diam. Pellentesque euismod sodales lorem, in facilisis lorem varius eget. Aenean vehicula egestas ligula id sagittis. Sed pharetra, turpis ac dapibus facilisis, nisi justo consequat orci, at faucibus sapien turpis non dui. Praesent ultrices faucibus justo et posuere.\n' +
-        '\n' +
-        'Fusce in sapien velit. Integer efficitur tempor massa et varius. Aliquam posuere ante nec quam porttitor rhoncus. Quisque eget nunc nec erat ullamcorper condimentum at non arcu. Suspendisse ac metus vitae massa facilisis auctor. Donec venenatis tempus nisl sit amet elementum. Vivamus mollis porta arcu euismod laoreet. In in dapibus quam. Nam suscipit nisi quis dolor semper, sit amet sollicitudin turpis pellentesque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin ullamcorper maximus sapien, eget malesuada turpis egestas vitae. Vivamus dignissim in sem eu pharetra. Vivamus at sagittis nunc. Quisque blandit est id erat pharetra, ut elementum arcu tempor. Duis iaculis vehicula augue eget mollis. Pellentesque accumsan vulputate est et viverra.'
-    },{
-        title: 'Test title',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque fringilla, nibh id elementum lobortis, metus sapien scelerisque dolor, vitae lacinia ante metus nec ipsum. Morbi interdum sollicitudin purus sed aliquet. Ut mollis lobortis dui eget scelerisque. Donec vel massa et dui lacinia gravida. Cras at quam dolor. Maecenas sit amet sapien ut justo ultricies semper at quis diam. Pellentesque euismod sodales lorem, in facilisis lorem varius eget. Aenean vehicula egestas ligula id sagittis. Sed pharetra, turpis ac dapibus facilisis, nisi justo consequat orci, at faucibus sapien turpis non dui. Praesent ultrices faucibus justo et posuere.\n' +
-        '\n' +
-        'Fusce in sapien velit. Integer efficitur tempor massa et varius. Aliquam posuere ante nec quam porttitor rhoncus. Quisque eget nunc nec erat ullamcorper condimentum at non arcu. Suspendisse ac metus vitae massa facilisis auctor. Donec venenatis tempus nisl sit amet elementum. Vivamus mollis porta arcu euismod laoreet. In in dapibus quam. Nam suscipit nisi quis dolor semper, sit amet sollicitudin turpis pellentesque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin ullamcorper maximus sapien, eget malesuada turpis egestas vitae. Vivamus dignissim in sem eu pharetra. Vivamus at sagittis nunc. Quisque blandit est id erat pharetra, ut elementum arcu tempor. Duis iaculis vehicula augue eget mollis. Pellentesque accumsan vulputate est et viverra.'
-    },{
-        title: 'Test title',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque fringilla, nibh id elementum lobortis, metus sapien scelerisque dolor, vitae lacinia ante metus nec ipsum. Morbi interdum sollicitudin purus sed aliquet. Ut mollis lobortis dui eget scelerisque. Donec vel massa et dui lacinia gravida. Cras at quam dolor. Maecenas sit amet sapien ut justo ultricies semper at quis diam. Pellentesque euismod sodales lorem, in facilisis lorem varius eget. Aenean vehicula egestas ligula id sagittis. Sed pharetra, turpis ac dapibus facilisis, nisi justo consequat orci, at faucibus sapien turpis non dui. Praesent ultrices faucibus justo et posuere.\n' +
-        '\n' +
-        'Fusce in sapien velit. Integer efficitur tempor massa et varius. Aliquam posuere ante nec quam porttitor rhoncus. Quisque eget nunc nec erat ullamcorper condimentum at non arcu. Suspendisse ac metus vitae massa facilisis auctor. Donec venenatis tempus nisl sit amet elementum. Vivamus mollis porta arcu euismod laoreet. In in dapibus quam. Nam suscipit nisi quis dolor semper, sit amet sollicitudin turpis pellentesque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin ullamcorper maximus sapien, eget malesuada turpis egestas vitae. Vivamus dignissim in sem eu pharetra. Vivamus at sagittis nunc. Quisque blandit est id erat pharetra, ut elementum arcu tempor. Duis iaculis vehicula augue eget mollis. Pellentesque accumsan vulputate est et viverra.'
-    },
-]
-)
 const loadMore = ref<HTMLElement | null>(null)
 const observer = ref<IntersectionObserver | null>(null)
-const isFulfilled = ref<boolean>(false)
-
+const isFulfilled = ref<boolean>(true)
+const scriptIsLoading = ref<boolean>(false)
 watch(
     () => loadMore.value,
     () => {
@@ -49,31 +30,50 @@ const onObserverUpdate = (): void => {
 
 const loadMoreScripts = (): void => {
   setTimeout(() => {
-    scripts.value = [...scripts.value, ...scripts.value.splice(0, 5)]
+    // scripts.value = [...scripts.value, ...scripts.value.splice(0, 5)]
   }, 1000)
 }
+
+const executeScript = async (script, key) => {
+  scriptIsLoading.value = true
+  const resp = await axios.post(`http://localhost:8000/vms/${currentHost.value?.id}/execute_script/`, {
+    script: script.id
+  })
+  scriptIsLoading.value = false
+  alert(`script #${key}, message: ${resp.data.output}`)
+}
+
+const executeAllScripts = async () => {
+  // await Promise.all(currentHost.value?.scripts.map(async (v, k) => executeScript(v, k)))
+  currentHost.value?.scripts.forEach((v, k) => {
+    executeScript(v, k)
+  })
+}
+
 </script>
 
 <template>
   <v-card class="w-100 h-100 bg-color3 d-flex flex-column rounded-0 overflow-auto custom-scrollbar pa-4 pb-0" flat>
+    <v-btn class="ml-auto" height="50" color="color2" flat variant="tonal" @click="executeAllScripts">Активировать все</v-btn>
     <div class="d-flex flex-column text-color1 border-b" v-for="(script, key) in scripts" :key="key">
       <v-card-title>
-        {{script.title}}
+        {{script.name}}
       </v-card-title>
       <v-card-text>
         {{script.description}}
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
-        <v-btn>
+        <v-btn @click="executeScript(script, key)">
           Активировать
         </v-btn>
       </v-card-actions>
     </div>
-    <div class="d-flex w-100 text-color1" ref="loadMore">
+    <div v-if="!isFulfilled" class="d-flex w-100 text-color1" ref="loadMore">
       <v-progress-circular size="30" class="ma-auto my-3" indeterminate />
     </div>
   </v-card>
+  <overlay-loader :loading="scriptIsLoading"></overlay-loader>
 </template>
 
 <style scoped lang="scss">
