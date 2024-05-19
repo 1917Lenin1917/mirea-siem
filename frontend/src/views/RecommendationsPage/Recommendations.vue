@@ -10,7 +10,7 @@ const handleSetConnection = (): void => {
   setTimeout((): void => {
     isConnectionEstablished.value = true
     connecting.value = false
-  }, 2000)
+  }, 1000)
 }
 </script>
 

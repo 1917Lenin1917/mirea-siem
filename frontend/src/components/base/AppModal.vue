@@ -48,7 +48,7 @@
           >
             {{ cancelText }}
           </v-btn>
-          <v-btn class="bg-primary" @click="confirm">
+          <v-btn v-if="!noConfirmButton" class="bg-primary" @click="confirm">
             {{ confirmText }}
           </v-btn>
         </slot>
@@ -67,6 +67,7 @@ const props = withDefaults(
       confirmText?: string
       cancelText?: string
       noCancelButton?: boolean
+      noConfirmButton?: boolean
       options?: VDialog['$props']
       noCloseButton?: boolean,
       isBusy?: boolean
@@ -77,6 +78,7 @@ const props = withDefaults(
       cancelText: 'Cancel',
       noCloseButton: false,
       noCancelButton: false,
+      noConfirmButton: false,
       options: () => ({}),
     },
 )

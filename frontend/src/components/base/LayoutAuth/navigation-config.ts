@@ -1,4 +1,5 @@
 import useApp from "../../../store/app.ts";
+import {computed, reactive, ref} from "vue";
 const { currentHost } = useApp()
 
 export type MenuItem = {
@@ -6,25 +7,27 @@ export type MenuItem = {
     redirect: { name: string },
     isVisible: boolean,
 }
-
-export default function useNavigationConfig() {
-    const MENU_ITEMS: MenuItem[] = [{
+const MENU_ITEMS = computed<MenuItem[]>(() => {
+    return [{
         label: 'Установка соединения',
         redirect: { name: 'connect' },
         isVisible: true,
     },{
         label: 'Инциденты',
         redirect: { name: 'incidents' },
-        isVisible: true
+        isVisible: currentHost.value,
     },{
         label: 'Рекомендации',
         redirect: { name: 'recommendations' },
-        isVisible: true
+        isVisible: currentHost.value,
     },{
         label: 'Скрипты',
         redirect: { name: 'scripts' },
-        isVisible: true
+        isVisible: currentHost.value,
     } ]
+})
+export default function useNavigationConfig() {
+
     
     return {
         MENU_ITEMS,
