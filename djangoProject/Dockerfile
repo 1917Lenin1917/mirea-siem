@@ -2,8 +2,11 @@ FROM python:latest
 
 WORKDIR /app
 ENV DJANGO_SUPERUSER_PASSWORD="django_admin"
-COPY . .
+
+COPY requirements.txt .
 RUN pip install -r requirements.txt
+
+COPY . .
 
 RUN python manage.py migrate
 RUN yes yes | python manage.py collectstatic

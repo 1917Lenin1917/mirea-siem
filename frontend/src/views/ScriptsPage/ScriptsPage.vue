@@ -61,7 +61,7 @@ const onScriptActivated = async (script: ExtendedScript) => {
     const res = await executeScript(script.id)
     setScriptStatus(script, res)
 
-  } catch (e) {
+  } catch (e: any) {
     setScriptStatus(script, {
       error: e.message ?? 'В полцессе выполнения скрипта произошла ошибка',
       status: 'notExecuted',

@@ -1,6 +1,6 @@
 import {computed, ref} from "vue";
 
-type Script = {id:number, name: string, description: string}
+type Script = {id:number, name: string, description: string, category: string}
 type StatusBody = {
     title: string,
     color: string,
@@ -31,6 +31,7 @@ export interface ExtendedScript extends Script {
     status: StatusBody
     statusText?: string
     recommendationText?: string[]
+    category: string
 }
 
 const scriptsList = ref<ExtendedScript[]>([])

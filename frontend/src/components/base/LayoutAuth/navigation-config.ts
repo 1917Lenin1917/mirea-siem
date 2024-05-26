@@ -15,7 +15,7 @@ const MENU_ITEMS = computed<MenuItem[]>(() => {
     },{
         label: 'Инциденты',
         redirect: { name: 'incidents' },
-        isVisible: currentHost.value,
+        isVisible: !!currentHost.value,
     },/*{
         label: 'Рекомендации',
         redirect: { name: 'recommendations' },
@@ -23,7 +23,7 @@ const MENU_ITEMS = computed<MenuItem[]>(() => {
     },*/{
         label: 'Скрипты',
         redirect: { name: 'scripts' },
-        isVisible: currentHost.value,
+        isVisible: !!currentHost.value,
     } ]
 })
 export default function useNavigationConfig() {
