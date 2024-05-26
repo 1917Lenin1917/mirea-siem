@@ -5,7 +5,7 @@ import useApp from "../store/app";
 const { currentHost } = useApp()
 
 const executeScript = async (scriptId: number): Promise<void> => {
-    const resp = await axios.post(`http://26.41.183.33:8000/vms/${currentHost.value?.id}/execute_script/`, {
+    const resp = await axios.post(`http://localhost:8000/vms/${currentHost.value?.id}/execute_script/`, {
         script: scriptId
     })
     return resp.data

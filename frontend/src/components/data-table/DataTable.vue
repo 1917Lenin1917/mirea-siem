@@ -15,16 +15,18 @@ const props = defineProps<Props>()
     <v-table class="table pa-2 w-100">
       <thead class="text-accent">
       <td v-for="(col, key) in columns" :key="key" class="text- table__head pa-2">
-        {{col.type !== 'actions' ? col.label: ''}}
+        {{ col.type !== 'actions' ? col.label : '' }}
       </td>
       </thead>
       <tbody>
       <tr v-if="!items.length">
-        <td :colspan="columns.length" class="text-center text-color1" >Данные отсутствуют</td>
+        <td :colspan="columns.length" class="text-center text-color1">Данные отсутствуют</td>
       </tr>
       <tr v-for="(item, index)  in items" :key="index">
-        <td v-for="(column, key) in columns.filter((col) => col.type !== 'actions')" class="px-2 text-color1" :key="key">
-          {{item[column.name] ?? '-'}}
+        <td v-for="(column, key) in columns.filter((col) => col.type !== 'actions')"
+            :class="column.name === 'priority' ? item[column.name] === 'WARNING' ? 'text-warning' : 'text-info' : 'text-color1'"
+            class="px-2 " :key="key">
+          {{ item[column.name] ?? '-' }}
         </td>
         <td v-if="item['actions']" class="pa-0" width="1">
           <slot name="actions">
@@ -46,7 +48,7 @@ const props = defineProps<Props>()
                     link
                     @click="action.value()"
                 >
-                  {{action.title}}
+                  {{ action.title }}
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -64,6 +66,6 @@ const props = defineProps<Props>()
 .table {
   &__head {
     border-bottom: 1px solid #e0e0e0;
-   }
+  }
 }
 </style>

@@ -1,31 +1,38 @@
 <script setup lang="ts">
 import DataTable from "../../components/data-table/DataTable.vue";
-import {ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {Table} from "../../namespaces/table";
-import {Incidents} from "../../namespaces/incidents";
+import {IncidentItem, Priority} from "../../namespaces/incidents";
 import {COLUMNS} from "../../table-configs/incidents";
 import AppModal from "../../components/base/AppModal.vue";
 import useApp from "../../store/app.ts";
+import useVMs from "../../api/vms.ts";
+// import IncidentItem = Incidents.IncidentItem;
 const { currentHost } = useApp()
-const apiItems = ref([//emulating objects from backend
-  {
-    time: '18:33',
-    date: '07.04.2024',
-    label: 'test',
-    priority: "info" as Incidents.Priority,
-  },
-  {
-    time: '18:33',
-    date: '07.04.2024',
-    label: 'test',
-    priority: "info" as Incidents.Priority,
-  },
-])
+const { getVMOutput } = useVMs()
+
+// const apiItems = ref([//emulating objects from backend
+//   {
+//     time: '18:33',
+//     date: '07.04.2024',
+//     label: 'test',
+//     priority: "info" as Incidents.Priority,
+//   },
+//   {
+//     time: '18:33',
+//     date: '07.04.2024',
+//     label: 'test',
+//     priority: "info" as Incidents.Priority,
+//   },
+// ])
+
+const apiItems = ref<IncidentItem[]>([])
 
 const itemToPreview = ref()
 const isPreviewModalOpen = ref<boolean>(false)
 
-const items = ref<Incidents.IncidentItem[]>(apiItems.value.map((item, index) => {
+const items = computed( () => apiItems.value?.map((item, index) => {
+  console.log(item)
   return {
     ...item,
     actions: [
@@ -42,6 +49,11 @@ const openInfoModal = (item) => {
   isPreviewModalOpen.value = true
 }
 
+onMounted(async () => {
+  apiItems.value = await getVMOutput(currentHost.value!.id)
+  console.log(apiItems)
+})
+
 </script>
 
 <template>
@@ -52,11 +64,13 @@ const openInfoModal = (item) => {
     <v-card-subtitle class="pa-0">
       Хост: {{ currentHost?.ip_address }}
     </v-card-subtitle>
+<!--    {{ items }}-->
+<!--    {{ apiItems }}-->
     <data-table :columns="COLUMNS" :items="items" />
   </v-card>
   <app-modal v-model="isPreviewModalOpen" @confirm="isPreviewModalOpen = false" @close="isPreviewModalOpen = false" title="Подробности" no-cancel-button>
     <v-card-text class="text-surface-variant">
-      Описание: тест
+      Описание: {{ itemToPreview.warning.join('\n') }}
     </v-card-text>
   </app-modal>
 </template>
