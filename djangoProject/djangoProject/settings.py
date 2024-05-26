@@ -23,10 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-jlrqz8o-ysf1@6-ko-6mz$jb#2y2093i-a$qa5xjqb*3&8=1&6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -42,7 +41,8 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://172.22.16.195:5173']
+# CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://172.22.16.195:5173', 'http://26.41.183.33:5173', 'http://26.4.217.59:5173']
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 MIDDLEWARE = [
@@ -120,7 +120,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
