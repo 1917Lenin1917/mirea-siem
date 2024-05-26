@@ -15,10 +15,17 @@ services:
     ports:
       - "8000:8000"
       - "22:22"
+#    network_mode: host
 
-  vm:
+  vm1:
     build:
       context: vm
       dockerfile: Dockerfile
-    ports:
-      - "9000:9000"
+#    ports:
+#      - "9000:9000"
+  vm2:
+    build:
+      context: vm
+      dockerfile: Dockerfile
+#    ports:
+#      - "9000:9000"

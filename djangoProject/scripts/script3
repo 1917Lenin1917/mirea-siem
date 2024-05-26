@@ -1,9 +1,0 @@
-#!/bin/bash
-
-test=$(sudo ufw status | grep "Status:")
-
-if [[ $test == *"inactive"* ]]; then
-echo "The firewall is disabled on the device. It may not be safe!";
-fi
-
-
