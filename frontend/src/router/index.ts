@@ -31,14 +31,14 @@ const routes: Array<RouteRecordRaw> = [
             requiresHost: true
         }
     },
-    {
+    /*{
         path: '/recommendations',
         name: 'recommendations',
         component: () => import('../views/RecommendationsPage/Recommendations.vue'),
         meta: {
             requiresHost: true
         }
-    },
+    },*/
 ]
 
 const router = createRouter({
