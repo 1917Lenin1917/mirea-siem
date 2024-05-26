@@ -13,6 +13,6 @@ const executeScript = async (scriptId: number): Promise<void> => {
 
 export default function useScripts() {
     return {
-        executeScript
+        executeScript,
     }
 }

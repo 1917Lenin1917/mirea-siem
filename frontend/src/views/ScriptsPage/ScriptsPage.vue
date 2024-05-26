@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
-import useApp from "../../store/app.ts";
-import axios from "axios";
-import OverlayLoader from "../../components/OverlayLoader.vue";
 import useScriptsStore, {AVAILABLE_STATUSES, ExtendedScript} from "../../store/scripts";
 import useScripts from "../../api/scripts";
 import AppModal from "../../components/base/AppModal.vue";
-const { currentHost } = useApp()
-
-const { scriptsList } = useScriptsStore()
+const { filteredScripts, scriptsFilterState, availableScriptTypes } = useScriptsStore()
 
 const { executeScript } = useScripts()
 
@@ -67,6 +62,11 @@ const onScriptActivated = async (script: ExtendedScript) => {
     setScriptStatus(script, res)
 
   } catch (e) {
+    setScriptStatus(script, {
+      error: e.message ?? 'В полцессе выполнения скрипта произошла ошибка',
+      status: 'notExecuted',
+    })
+
   } finally {
     script.isLoading = false
     scriptIsLoading.value = false
@@ -74,7 +74,7 @@ const onScriptActivated = async (script: ExtendedScript) => {
 }
 
 const setScriptStatus = (script: ExtendedScript, res): void  => {
-  script.status = res.status === 'success' ? AVAILABLE_STATUSES['2']:AVAILABLE_STATUSES['1']
+  script.status = res.status === 'success' ? AVAILABLE_STATUSES['2'] :res.status === 'notExecuted' ? AVAILABLE_STATUSES['3'] : AVAILABLE_STATUSES['1']
   script.recommendationText = res.recommendation ?? []
   script.statusText = res.error
 }
@@ -87,9 +87,8 @@ const computedRecommendationsText = computed<string[]>(() => {
 
 
 const executeAllScripts = async () => {
-  // await Promise.all(currentHost.value?.scripts.map(async (v, k) => executeScript(v, k)))
-  currentHost.value?.scripts.forEach((v, k) => {
-    onScriptActivated(v, k)
+  filteredScripts.value?.forEach((v: ExtendedScript) => {
+    onScriptActivated(v)
   })
 }
 
@@ -97,15 +96,21 @@ const executeAllScripts = async () => {
 
 <template>
   <v-card class="w-100 h-100 bg-color3 d-flex flex-column rounded-0 overflow-auto custom-scrollbar pa-4 pb-0" flat>
-<!--
-    <v-btn class="ml-auto mb-4" height="50" color="color2" flat variant="tonal" @click="executeAllScripts">Активировать все</v-btn>
--->
-    <v-list-item v-for="(script, key) in scriptsList" :key="key" @click="handleOpenModal(script)">
+    <div class="d-flex flex-row w-100">
+      <v-combobox multiple max-width="235" label="Тип скрипта" item-title="title" item-value="title" v-model="scriptsFilterState" :items="availableScriptTypes"/>
+      <v-spacer />
+      <v-btn class="ml-auto mb-4" height="50" color="color2" flat variant="tonal" @click="executeAllScripts">Активировать все</v-btn>
+    </div>
+    <v-list-item v-for="(script, key) in filteredScripts" :key="key" @click="handleOpenModal(script)">
     <div class="d-flex flex-column text-color1 border-b" >
       <v-card-title >
         {{script.name}}
 
       </v-card-title>
+      <v-card-subtitle >
+        Категория: {{script?.category ?? '??'}}
+
+      </v-card-subtitle>
       <v-card-text>
         {{script.description}}
       </v-card-text>
@@ -128,7 +133,8 @@ const executeAllScripts = async () => {
       {{selectedScript?.description}}
     </v-card-text>
     <v-card-text class="d-flex align-center">
-      <div class="card__script-status" :class="`card__script-status--${selectedScript?.status.color}`" />
+      <div v-if="!selectedScript?.isLoading" class="card__script-status" :class="`card__script-status--${selectedScript?.status.color}`" />
+      <v-progress-circular v-else class="mr-3" size="20" indeterminate />
       {{selectedScript?.status.title}}
     </v-card-text>
     <v-card-text>
@@ -160,6 +166,9 @@ const executeAllScripts = async () => {
     }
     &--green {
       background-color: #35ff00;
+    }
+    &--black {
+      background-color: #000000;
     }
   }
   &__header {

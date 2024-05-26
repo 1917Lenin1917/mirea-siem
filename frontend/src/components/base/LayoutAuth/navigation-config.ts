@@ -16,11 +16,11 @@ const MENU_ITEMS = computed<MenuItem[]>(() => {
         label: 'Инциденты',
         redirect: { name: 'incidents' },
         isVisible: currentHost.value,
-    },{
+    },/*{
         label: 'Рекомендации',
         redirect: { name: 'recommendations' },
         isVisible: currentHost.value,
-    },{
+    },*/{
         label: 'Скрипты',
         redirect: { name: 'scripts' },
         isVisible: currentHost.value,
