@@ -40,9 +40,9 @@ const isDrawerOpen = ref<boolean>(false)
       <span>
         РТУ МИРЭА. Все права защищены.
       </span>
-      <span>
+      <a to="https://dodopizza.ru/product/arriva">
         Политика конфиденциальности
-      </span>
+      </a>
     </v-footer>
   </v-app>
 </template>

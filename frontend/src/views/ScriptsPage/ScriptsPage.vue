@@ -74,9 +74,11 @@ const onScriptActivated = async (script: ExtendedScript) => {
 }
 
 const setScriptStatus = (script: ExtendedScript, res): void  => {
-  script.status = res.status === 'success' ? AVAILABLE_STATUSES['2'] :res.status === 'notExecuted' ? AVAILABLE_STATUSES['3'] : AVAILABLE_STATUSES['1']
+  // script.status = res.status === 'success' ? AVAILABLE_STATUSES['2'] :res.status === 'notExecuted' ? AVAILABLE_STATUSES['3'] : AVAILABLE_STATUSES['1']
+  script.status = !res.warning ? AVAILABLE_STATUSES['2'] : res.status === 'notExecuted' ? AVAILABLE_STATUSES['3'] : AVAILABLE_STATUSES['1']
+  
   script.recommendationText = res.recommendation ?? []
-  script.statusText = res.error
+  script.statusText = res.warning?.join(', ') ?? ''
 }
 
 const computedRecommendationsText = computed<string[]>(() => {
@@ -120,7 +122,7 @@ const executeAllScripts = async () => {
         {{script.status.title}}
       </v-card-text>
       <v-card-text>
-        {{script.statusText}}
+        {{script.warning?.join(', ') ?? ''}}
       </v-card-text>
     </div>
     </v-list-item>

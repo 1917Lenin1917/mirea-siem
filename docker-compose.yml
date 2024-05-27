@@ -21,8 +21,9 @@ services:
     build:
       context: vm
       dockerfile: Dockerfile
-#    ports:
-#      - "9000:9000"
+    ports:
+      - "80:80"
+        #      - "9000:9000"
   vm2:
     build:
       context: vm

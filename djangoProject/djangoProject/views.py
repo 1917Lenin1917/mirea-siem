@@ -68,11 +68,12 @@ class VMView(ModelViewSet):
             lines = output.split('\n')
             warning = list(map(lambda line: line.replace('[WARNING]', ''), filter(lambda line: line.startswith('[WARNING]'), lines)))
             recommendation = list(map(lambda line: line.replace('[RECOMMEND]', ''), filter(lambda line: line.startswith('[RECOMMEND]'), lines)))
-            SCRIPT_OUTPUTS.append({'date': f'{now.day:02}.{now.month:02}.{now.year:02}', 'time': f'{now.hour:02}:{now.minute:02}', 'label': obj.scripts.get(id=script_id).name, 'priority': 'WARNING', 'warning': warning})
+            SCRIPT_OUTPUTS.append({'date': f'{now.day:02}.{now.month:02}.{now.year:02}', 'time': f'{now.hour:02}:{now.minute:02}', 'label': obj.scripts.get(id=script_id).name, 'priority': 'WARNING', 'warning': warning, 'vm': obj.id})
         else:
-            SCRIPT_OUTPUTS.append({'date': f'{now.day:02}.{now.month:02}.{now.year:02}', 'time': f'{now.hour:02}:{now.minute:02}', 'label': obj.scripts.get(id=script_id).name, 'priority': 'INFO', 'warning': None})
+            SCRIPT_OUTPUTS.append({'date': f'{now.day:02}.{now.month:02}.{now.year:02}', 'time': f'{now.hour:02}:{now.minute:02}', 'label': obj.scripts.get(id=script_id).name, 'priority': 'INFO', 'warning': None, 'vm': obj.id})
         return JsonResponse({'status': 'success', 'script_id': script_id, 'output': output, 'error': error, 'warning': warning, 'recommendation': recommendation})
 
     @action(detail=True, methods=['get'])
     def get_output(self, request, *args, **kwargs):
-        return JsonResponse({'output': sorted(SCRIPT_OUTPUTS, key=lambda x: x['time'], reverse=True)})
+        obj = self.get_object()
+        return JsonResponse({'output': list(filter(lambda x: x['vm'] == obj.id, sorted(SCRIPT_OUTPUTS, key=lambda x: x['time'], reverse=True)))})

@@ -30,6 +30,7 @@ export interface ExtendedScript extends Script {
     isLoading: boolean
     status: StatusBody
     statusText?: string
+    warning? :string[],
     recommendationText?: string[]
     category: string
 }
